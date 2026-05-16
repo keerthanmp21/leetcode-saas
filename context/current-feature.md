@@ -21,3 +21,4 @@ Not Started
 <!-- Keep this updated. Earliest to latest -->
 
 - Project setup and boilerplate cleanup
+- Dashboard UI Phase 1: shadcn/ui init, Input component, /dashboard route, dark mode by default, top bar with search, sidebar and main placeholders
