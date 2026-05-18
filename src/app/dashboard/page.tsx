@@ -4,11 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ProblemDetailsDrawer } from "@/components/dashboard/problem-details-drawer";
 import {
   mockDashboardStats,
   getProblemsGroupedByPattern,
   isSolved,
-  getLeetCodeUrl,
   type Problem,
   type Pattern,
 } from "@/lib/mock-data";
@@ -31,17 +31,21 @@ function DifficultyBadge({ difficulty }: { difficulty: Problem["difficulty"] }) 
 
 // ─── Problem card ──────────────────────────────────────────────────────────────
 
-function ProblemCard({ problem }: { problem: Problem }) {
+function ProblemCard({
+  problem,
+  onSelect,
+}: {
+  problem: Problem;
+  onSelect: (problem: Problem) => void;
+}) {
   const solved = isSolved(problem.id);
   const visibleTopics = problem.topics.slice(0, 2);
   const extraTopics = problem.topics.length - 2;
 
   return (
-    <a
-      href={getLeetCodeUrl(problem.titleSlug)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group relative flex flex-col gap-2 rounded-lg border border-border bg-card p-4 transition-colors hover:border-border/80 hover:bg-accent/40"
+    <button
+      onClick={() => onSelect(problem)}
+      className="group relative flex w-full cursor-pointer flex-col gap-2 rounded-lg border border-border bg-card p-4 text-left transition-colors hover:border-border/80 hover:bg-accent/40"
     >
       {problem.isPaidOnly && (
         <Lock className="absolute right-3 top-3 size-3.5 text-muted-foreground/60" />
@@ -76,7 +80,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
           Solved
         </p>
       )}
-    </a>
+    </button>
   );
 }
 
@@ -127,15 +131,16 @@ function PatternRow({
   pattern,
   problems,
   showUnsolved,
+  onSelectProblem,
 }: {
   pattern: Pattern;
   problems: Problem[];
   showUnsolved: boolean;
+  onSelectProblem: (problem: Problem) => void;
 }) {
   const filtered = showUnsolved ? problems.filter((p) => !isSolved(p.id)) : problems;
   if (filtered.length === 0) return null;
 
-  // Show at most 4 cards, remainder indicated by arrow
   const visible = filtered.slice(0, 4);
   const borderClass = PATTERN_BORDER[pattern.name] ?? "border-emerald-500";
 
@@ -154,7 +159,7 @@ function PatternRow({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visible.map((p) => (
-          <ProblemCard key={p.id} problem={p} />
+          <ProblemCard key={p.id} problem={p} onSelect={onSelectProblem} />
         ))}
       </div>
     </div>
@@ -165,73 +170,89 @@ function PatternRow({
 
 export default function DashboardPage() {
   const [filter, setFilter] = useState<"all" | "unsolved">("all");
+  const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const grouped = getProblemsGroupedByPattern();
 
-  return (
-    <div className="space-y-8">
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatsCard
-          label="Total Solved"
-          value={mockDashboardStats.totalSolved}
-          sub={`+${mockDashboardStats.solvedThisMonth} this month`}
-          barColor="bg-emerald-500"
-        />
-        <StatsCard
-          label="Easy"
-          value={mockDashboardStats.easy}
-          sub="Completed"
-          barColor="bg-emerald-500"
-        />
-        <StatsCard
-          label="Medium"
-          value={mockDashboardStats.medium}
-          sub="Completed"
-          barColor="bg-yellow-500"
-        />
-        <StatsCard
-          label="Hard"
-          value={mockDashboardStats.hard}
-          sub="Completed"
-          barColor="bg-red-500"
-        />
-      </div>
+  function handleSelectProblem(problem: Problem) {
+    setSelectedProblem(problem);
+    setDrawerOpen(true);
+  }
 
-      {/* Problems by Pattern */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground">Problems by Pattern</h2>
-          <div className="flex gap-1 rounded-lg border border-border bg-card p-1">
-            <Button
-              size="sm"
-              variant={filter === "all" ? "secondary" : "ghost"}
-              className="h-7 px-3 text-xs"
-              onClick={() => setFilter("all")}
-            >
-              All
-            </Button>
-            <Button
-              size="sm"
-              variant={filter === "unsolved" ? "secondary" : "ghost"}
-              className="h-7 px-3 text-xs"
-              onClick={() => setFilter("unsolved")}
-            >
-              Unsolved
-            </Button>
+  return (
+    <>
+      <div className="space-y-8">
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatsCard
+            label="Total Solved"
+            value={mockDashboardStats.totalSolved}
+            sub={`+${mockDashboardStats.solvedThisMonth} this month`}
+            barColor="bg-emerald-500"
+          />
+          <StatsCard
+            label="Easy"
+            value={mockDashboardStats.easy}
+            sub="Completed"
+            barColor="bg-emerald-500"
+          />
+          <StatsCard
+            label="Medium"
+            value={mockDashboardStats.medium}
+            sub="Completed"
+            barColor="bg-yellow-500"
+          />
+          <StatsCard
+            label="Hard"
+            value={mockDashboardStats.hard}
+            sub="Completed"
+            barColor="bg-red-500"
+          />
+        </div>
+
+        {/* Problems by Pattern */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">Problems by Pattern</h2>
+            <div className="flex gap-1 rounded-lg border border-border bg-card p-1">
+              <Button
+                size="sm"
+                variant={filter === "all" ? "secondary" : "ghost"}
+                className="h-7 px-3 text-xs"
+                onClick={() => setFilter("all")}
+              >
+                All
+              </Button>
+              <Button
+                size="sm"
+                variant={filter === "unsolved" ? "secondary" : "ghost"}
+                className="h-7 px-3 text-xs"
+                onClick={() => setFilter("unsolved")}
+              >
+                Unsolved
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-8">
+            {grouped.map(({ pattern, problems }) => (
+              <PatternRow
+                key={pattern.id}
+                pattern={pattern}
+                problems={problems}
+                showUnsolved={filter === "unsolved"}
+                onSelectProblem={handleSelectProblem}
+              />
+            ))}
           </div>
         </div>
-
-        <div className="space-y-8">
-          {grouped.map(({ pattern, problems }) => (
-            <PatternRow
-              key={pattern.id}
-              pattern={pattern}
-              problems={problems}
-              showUnsolved={filter === "unsolved"}
-            />
-          ))}
-        </div>
       </div>
-    </div>
+
+      <ProblemDetailsDrawer
+        problem={selectedProblem}
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+      />
+    </>
   );
 }
