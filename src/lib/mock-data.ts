@@ -280,6 +280,251 @@ export const mockProblems: Problem[] = [
     timeComplexity: "O(n)",
     spaceComplexity: "O(h)",
   },
+  // Two Pointer (additional)
+  {
+    id: "prob_16",
+    questionId: 125,
+    title: "Valid Palindrome",
+    titleSlug: "valid-palindrome",
+    difficulty: "EASY",
+    acceptanceRate: 43.1,
+    isPaidOnly: false,
+    topics: ["Two Pointers", "String"],
+    description:
+      "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Given a string s, return true if it is a palindrome, or false otherwise.",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+  },
+  {
+    id: "prob_17",
+    questionId: 42,
+    title: "Trapping Rain Water",
+    titleSlug: "trapping-rain-water",
+    difficulty: "HARD",
+    acceptanceRate: 56.9,
+    isPaidOnly: false,
+    topics: ["Array", "Two Pointers", "Stack"],
+    description:
+      "Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+  },
+  // Binary Search (additional)
+  {
+    id: "prob_18",
+    questionId: 153,
+    title: "Find Minimum in Rotated Sorted Array",
+    titleSlug: "find-minimum-in-rotated-sorted-array",
+    difficulty: "MEDIUM",
+    acceptanceRate: 48.3,
+    isPaidOnly: false,
+    topics: ["Array", "Binary Search"],
+    description:
+      "Suppose an array of length n sorted in ascending order is rotated between 1 and n times. Given the sorted rotated array nums of unique elements, return the minimum element of this array.",
+    timeComplexity: "O(log n)",
+    spaceComplexity: "O(1)",
+  },
+  {
+    id: "prob_19",
+    questionId: 374,
+    title: "Guess Number Higher or Lower",
+    titleSlug: "guess-number-higher-or-lower",
+    difficulty: "EASY",
+    acceptanceRate: 50.8,
+    isPaidOnly: false,
+    topics: ["Binary Search", "Interactive"],
+    description:
+      "We are playing the Guess Game. I pick a number from 1 to n. You have to guess which number I picked. Every time you guess wrong, I will tell you whether the number I picked is higher or lower than your guess.",
+    timeComplexity: "O(log n)",
+    spaceComplexity: "O(1)",
+  },
+  // Dynamic Programming (additional)
+  {
+    id: "prob_20",
+    questionId: 1143,
+    title: "Longest Common Subsequence",
+    titleSlug: "longest-common-subsequence",
+    difficulty: "MEDIUM",
+    acceptanceRate: 56.9,
+    isPaidOnly: false,
+    topics: ["String", "Dynamic Programming"],
+    description:
+      "Given two strings text1 and text2, return the length of their longest common subsequence. If there is no common subsequence, return 0.",
+    timeComplexity: "O(m × n)",
+    spaceComplexity: "O(m × n)",
+  },
+  {
+    id: "prob_21",
+    questionId: 198,
+    title: "House Robber",
+    titleSlug: "house-robber",
+    difficulty: "MEDIUM",
+    acceptanceRate: 49.7,
+    isPaidOnly: false,
+    topics: ["Array", "Dynamic Programming"],
+    description:
+      "You are a professional robber planning to rob houses along a street. Adjacent houses have security systems connected. Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+  },
+  {
+    id: "prob_22",
+    questionId: 416,
+    title: "Partition Equal Subset Sum",
+    titleSlug: "partition-equal-subset-sum",
+    difficulty: "MEDIUM",
+    acceptanceRate: 46.3,
+    isPaidOnly: false,
+    topics: ["Array", "Dynamic Programming"],
+    description:
+      "Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.",
+    timeComplexity: "O(n × sum)",
+    spaceComplexity: "O(sum)",
+  },
+  // Sliding Window (additional)
+  {
+    id: "prob_23",
+    questionId: 567,
+    title: "Permutation in String",
+    titleSlug: "permutation-in-string",
+    difficulty: "MEDIUM",
+    acceptanceRate: 44.8,
+    isPaidOnly: false,
+    topics: ["Hash Table", "String", "Sliding Window"],
+    description:
+      "Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise. In other words, return true if one of s1's permutations is a substring of s2.",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+  },
+  {
+    id: "prob_24",
+    questionId: 424,
+    title: "Longest Repeating Character Replacement",
+    titleSlug: "longest-repeating-character-replacement",
+    difficulty: "MEDIUM",
+    acceptanceRate: 51.2,
+    isPaidOnly: false,
+    topics: ["Hash Table", "String", "Sliding Window"],
+    description:
+      "You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times. Return the length of the longest substring containing the same letter you can get after performing the above operations.",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+  },
+  // Tree (additional)
+  {
+    id: "prob_25",
+    questionId: 98,
+    title: "Validate Binary Search Tree",
+    titleSlug: "validate-binary-search-tree",
+    difficulty: "MEDIUM",
+    acceptanceRate: 32.2,
+    isPaidOnly: false,
+    topics: ["Tree", "Depth-First Search", "Binary Search Tree"],
+    description:
+      "Given the root of a binary tree, determine if it is a valid binary search tree (BST).",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(n)",
+  },
+  {
+    id: "prob_26",
+    questionId: 102,
+    title: "Binary Tree Level Order Traversal",
+    titleSlug: "binary-tree-level-order-traversal",
+    difficulty: "MEDIUM",
+    acceptanceRate: 65.3,
+    isPaidOnly: false,
+    topics: ["Tree", "Breadth-First Search", "Binary Tree"],
+    description:
+      "Given the root of a binary tree, return the level order traversal of its nodes' values (i.e., from left to right, level by level).",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(n)",
+  },
+  {
+    id: "prob_27",
+    questionId: 297,
+    title: "Serialize and Deserialize Binary Tree",
+    titleSlug: "serialize-and-deserialize-binary-tree",
+    difficulty: "HARD",
+    acceptanceRate: 55.4,
+    isPaidOnly: false,
+    topics: ["String", "Tree", "Depth-First Search", "Breadth-First Search"],
+    description:
+      "Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer. Design an algorithm to serialize and deserialize a binary tree.",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(n)",
+  },
+  // Graph
+  {
+    id: "prob_28",
+    questionId: 200,
+    title: "Number of Islands",
+    titleSlug: "number-of-islands",
+    difficulty: "MEDIUM",
+    acceptanceRate: 57.0,
+    isPaidOnly: false,
+    topics: ["Array", "Depth-First Search", "Breadth-First Search", "Graph"],
+    description:
+      "Given an m x n 2D binary grid which represents a map of '1's (land) and '0's (water), return the number of islands.",
+    timeComplexity: "O(m × n)",
+    spaceComplexity: "O(m × n)",
+  },
+  {
+    id: "prob_29",
+    questionId: 207,
+    title: "Course Schedule",
+    titleSlug: "course-schedule",
+    difficulty: "MEDIUM",
+    acceptanceRate: 45.3,
+    isPaidOnly: false,
+    topics: ["Depth-First Search", "Breadth-First Search", "Graph", "Topological Sort"],
+    description:
+      "There are a total of numCourses courses you have to take. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai. Return true if you can finish all courses.",
+    timeComplexity: "O(V + E)",
+    spaceComplexity: "O(V + E)",
+  },
+  {
+    id: "prob_30",
+    questionId: 417,
+    title: "Pacific Atlantic Water Flow",
+    titleSlug: "pacific-atlantic-water-flow",
+    difficulty: "MEDIUM",
+    acceptanceRate: 54.5,
+    isPaidOnly: false,
+    topics: ["Array", "Depth-First Search", "Breadth-First Search", "Graph"],
+    description:
+      "Given an m x n matrix of non-negative integers representing the height of each unit cell in a continent, find the list of grid coordinates where water can flow to both the Pacific and Atlantic ocean.",
+    timeComplexity: "O(m × n)",
+    spaceComplexity: "O(m × n)",
+  },
+  // HashMap (additional)
+  {
+    id: "prob_31",
+    questionId: 49,
+    title: "Group Anagrams",
+    titleSlug: "group-anagrams",
+    difficulty: "MEDIUM",
+    acceptanceRate: 66.3,
+    isPaidOnly: false,
+    topics: ["Array", "Hash Table", "String", "Sorting"],
+    description:
+      "Given an array of strings strs, group the anagrams together. You can return the answer in any order.",
+    timeComplexity: "O(n × k log k)",
+    spaceComplexity: "O(n × k)",
+  },
+  {
+    id: "prob_32",
+    questionId: 347,
+    title: "Top K Frequent Elements",
+    titleSlug: "top-k-frequent-elements",
+    difficulty: "MEDIUM",
+    acceptanceRate: 63.1,
+    isPaidOnly: false,
+    topics: ["Array", "Hash Table", "Sorting", "Heap"],
+    description:
+      "Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.",
+    timeComplexity: "O(n log k)",
+    spaceComplexity: "O(n)",
+  },
   // Greedy
   {
     id: "prob_14",
@@ -292,6 +537,34 @@ export const mockProblems: Problem[] = [
     topics: ["Array", "Greedy"],
     description:
       "You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return true if you can reach the last index, or false otherwise.",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+  },
+  {
+    id: "prob_33",
+    questionId: 45,
+    title: "Jump Game II",
+    titleSlug: "jump-game-ii",
+    difficulty: "MEDIUM",
+    acceptanceRate: 39.8,
+    isPaidOnly: false,
+    topics: ["Array", "Greedy"],
+    description:
+      "You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0]. Each element nums[i] represents the maximum length of a forward jump from index i. Return the minimum number of jumps to reach nums[n - 1].",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+  },
+  {
+    id: "prob_34",
+    questionId: 134,
+    title: "Gas Station",
+    titleSlug: "gas-station",
+    difficulty: "MEDIUM",
+    acceptanceRate: 44.1,
+    isPaidOnly: false,
+    topics: ["Array", "Greedy"],
+    description:
+      "There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i]. You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the ith station to its next (i + 1)th station. Return the starting gas station's index if you can travel around the circuit once in the clockwise direction, otherwise return -1.",
     timeComplexity: "O(n)",
     spaceComplexity: "O(1)",
   },
@@ -309,6 +582,63 @@ export const mockProblems: Problem[] = [
       "Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.",
     timeComplexity: "O(n!)",
     spaceComplexity: "O(n)",
+  },
+  {
+    id: "prob_35",
+    questionId: 78,
+    title: "Subsets",
+    titleSlug: "subsets",
+    difficulty: "MEDIUM",
+    acceptanceRate: 73.0,
+    isPaidOnly: false,
+    topics: ["Array", "Backtracking", "Bit Manipulation"],
+    description:
+      "Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.",
+    timeComplexity: "O(n × 2^n)",
+    spaceComplexity: "O(n × 2^n)",
+  },
+  {
+    id: "prob_36",
+    questionId: 51,
+    title: "N-Queens",
+    titleSlug: "n-queens",
+    difficulty: "HARD",
+    acceptanceRate: 65.5,
+    isPaidOnly: false,
+    topics: ["Array", "Backtracking"],
+    description:
+      "The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other. Given an integer n, return all distinct solutions to the n-queens puzzle.",
+    timeComplexity: "O(n!)",
+    spaceComplexity: "O(n²)",
+  },
+  // Trie
+  {
+    id: "prob_37",
+    questionId: 208,
+    title: "Implement Trie (Prefix Tree)",
+    titleSlug: "implement-trie-prefix-tree",
+    difficulty: "MEDIUM",
+    acceptanceRate: 58.7,
+    isPaidOnly: false,
+    topics: ["Hash Table", "String", "Design", "Trie"],
+    description:
+      "A trie (pronounced as 'try') or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. Implement the Trie class with insert, search, and startsWith methods.",
+    timeComplexity: "O(m)",
+    spaceComplexity: "O(m)",
+  },
+  {
+    id: "prob_38",
+    questionId: 212,
+    title: "Word Search II",
+    titleSlug: "word-search-ii",
+    difficulty: "HARD",
+    acceptanceRate: 37.4,
+    isPaidOnly: false,
+    topics: ["Array", "String", "Backtracking", "Trie"],
+    description:
+      "Given an m x n board of characters and a list of strings words, return all words on the board. Each word must be constructed from letters of sequentially adjacent cells. The same letter cell may not be used more than once in a word.",
+    timeComplexity: "O(m × n × 4^l)",
+    spaceComplexity: "O(l)",
   },
 ];
 
@@ -331,6 +661,29 @@ export const mockProblemPatterns: ProblemPattern[] = [
   { problemId: "prob_13", patternId: "pat_7" }, // Binary Tree Max Path → Tree
   { problemId: "prob_14", patternId: "pat_9" }, // Jump Game → Greedy
   { problemId: "prob_15", patternId: "pat_10" }, // Permutations → Backtracking
+  { problemId: "prob_16", patternId: "pat_1" }, // Valid Palindrome → Two Pointer
+  { problemId: "prob_17", patternId: "pat_1" }, // Trapping Rain Water → Two Pointer
+  { problemId: "prob_18", patternId: "pat_2" }, // Find Minimum Rotated → Binary Search
+  { problemId: "prob_19", patternId: "pat_2" }, // Guess Number → Binary Search
+  { problemId: "prob_20", patternId: "pat_3" }, // LCS → DP
+  { problemId: "prob_21", patternId: "pat_3" }, // House Robber → DP
+  { problemId: "prob_22", patternId: "pat_3" }, // Partition Equal Subset → DP
+  { problemId: "prob_23", patternId: "pat_4" }, // Permutation in String → Sliding Window
+  { problemId: "prob_24", patternId: "pat_4" }, // Longest Repeating Char Replacement → Sliding Window
+  { problemId: "prob_25", patternId: "pat_7" }, // Validate BST → Tree
+  { problemId: "prob_26", patternId: "pat_7" }, // Level Order Traversal → Tree
+  { problemId: "prob_27", patternId: "pat_7" }, // Serialize Deserialize → Tree
+  { problemId: "prob_28", patternId: "pat_8" }, // Number of Islands → Graph
+  { problemId: "prob_29", patternId: "pat_8" }, // Course Schedule → Graph
+  { problemId: "prob_30", patternId: "pat_8" }, // Pacific Atlantic → Graph
+  { problemId: "prob_31", patternId: "pat_6" }, // Group Anagrams → HashMap
+  { problemId: "prob_32", patternId: "pat_6" }, // Top K Frequent → HashMap
+  { problemId: "prob_33", patternId: "pat_9" }, // Jump Game II → Greedy
+  { problemId: "prob_34", patternId: "pat_9" }, // Gas Station → Greedy
+  { problemId: "prob_35", patternId: "pat_10" }, // Subsets → Backtracking
+  { problemId: "prob_36", patternId: "pat_10" }, // N-Queens → Backtracking
+  { problemId: "prob_37", patternId: "pat_11" }, // Implement Trie → Trie
+  { problemId: "prob_38", patternId: "pat_11" }, // Word Search II → Trie
 ];
 
 // ─── Solution approaches per problem (shown in the detail drawer) ─────────────
