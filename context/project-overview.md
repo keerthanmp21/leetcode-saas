@@ -259,21 +259,84 @@ Map relationships between:
 
 ## Data Model
 
+### Enums
+
+```prisma
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+```
+
+---
+
+### NextAuth Models
+
+Required by NextAuth v5 for OAuth and session management.
+
+```prisma
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+```
+
+---
+
 ### User
 
 Stores application users.
 
 ```prisma
 model User {
-  id                String   @id @default(cuid())
-  name              String?
-  email             String?  @unique
-  leetcodeUsername  String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id               String    @id @default(cuid())
+  name             String?
+  email            String?   @unique
+  emailVerified    DateTime?
+  image            String?
+  leetcodeUsername String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  problems          UserProblem[]
-  submissions       Submission[]
+  accounts        Account[]
+  sessions        Session[]
+  problems        UserProblem[]
+  submissions     Submission[]
+  leetcodeSession LeetCodeSession?
 }
 ```
 
@@ -285,39 +348,30 @@ Stores LeetCode problems with direct link generation.
 
 ```prisma
 model Problem {
-  id              String     @id @default(cuid())
-  questionId      Int        @unique           // LeetCode problem number
-  title           String
-  titleSlug       String     @unique           // Used to generate LeetCode URL
-  difficulty      Difficulty
-  acceptanceRate  Float?
-  isPaidOnly      Boolean    @default(false)
-  topics          String[]                     // LeetCode tags ["Array", "Hash Table"]
+  id             String     @id @default(cuid())
+  questionId     Int        @unique
+  title          String
+  titleSlug      String     @unique
+  difficulty     Difficulty
+  acceptanceRate Float?
+  isPaidOnly     Boolean    @default(false)
+  topics         String[]
 
-  patterns        ProblemPattern[]
-  solvedByUsers   UserProblem[]
-  submissions     Submission[]
+  patterns      ProblemPattern[]
+  solvedByUsers UserProblem[]
+  submissions   Submission[]
 
   @@index([difficulty])
   @@index([isPaidOnly])
-}
-
-enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
 }
 ```
 
 **LeetCode URL Construction:**
 ```typescript
-// Helper function to generate LeetCode link
 function getLeetCodeUrl(problem: Problem): string {
   return `https://leetcode.com/problems/${problem.titleSlug}/`;
 }
-
-// Example: titleSlug = "two-sum"
-// URL: https://leetcode.com/problems/two-sum/
+```
 
 ---
 
@@ -327,13 +381,13 @@ Tracks solved problems per user.
 
 ```prisma
 model UserProblem {
-  userId       String
-  problemId    String
+  userId        String
+  problemId     String
   firstSolvedAt DateTime?
   lastSolvedAt  DateTime?
 
-  user         User    @relation(fields: [userId], references: [id])
-  problem      Problem @relation(fields: [problemId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@id([userId, problemId])
 }
@@ -345,10 +399,10 @@ model UserProblem {
 
 ```prisma
 model Pattern {
-  id        String @id @default(cuid())
-  name      String @unique
+  id   String @id @default(cuid())
+  name String @unique
 
-  problems  ProblemPattern[]
+  problems ProblemPattern[]
 }
 ```
 
@@ -361,8 +415,8 @@ model ProblemPattern {
   problemId String
   patternId String
 
-  problem   Problem @relation(fields: [problemId], references: [id])
-  pattern   Pattern @relation(fields: [patternId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  pattern Pattern @relation(fields: [patternId], references: [id], onDelete: Cascade)
 
   @@id([problemId, patternId])
 }
@@ -375,19 +429,36 @@ model ProblemPattern {
 ```prisma
 model Submission {
   id          String   @id @default(cuid())
-
   userId      String
   problemId   String
-
   status      String
   language    String?
   runtime     String?
   memory      String?
-
   submittedAt DateTime
 
-  user         User    @relation(fields: [userId], references: [id])
-  problem      Problem @relation(fields: [problemId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+}
+```
+
+---
+
+### LeetCodeSession
+
+Stores the user's LeetCode session cookie for authenticated API calls.
+
+```prisma
+model LeetCodeSession {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  sessionToken    String
+  isValid         Boolean   @default(false)
+  lastValidatedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 ```
 
