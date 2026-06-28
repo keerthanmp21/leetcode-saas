@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import { Search, Zap } from "lucide-react"
 import { DesktopSidebar, MobileSidebarTrigger } from "@/components/dashboard/sidebar"
+import { SyncButton } from "@/components/dashboard/sync-button"
 
 export default function DashboardLayout({
   children,
@@ -35,9 +35,7 @@ export default function DashboardLayout({
             </div>
 
             <div className="flex justify-end">
-              <Button className="bg-emerald-500 text-black hover:bg-emerald-400 shrink-0">
-                Sync Now
-              </Button>
+              <SyncButton />
             </div>
           </div>
 
