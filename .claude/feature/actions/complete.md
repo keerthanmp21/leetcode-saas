@@ -7,6 +7,7 @@
    - Change H1 back to `# Current Feature`
    - Clear Goals and Notes sections (keep placeholder comments)
    - Add feature summary to the END of History
+   - don't add Co-Authored-By claude
 5. Commit the reset: `chore: reset current-feature.md after completing [feature]`
 6. Push main to origin ONCE (single push with all changes)
 7. If feature branch was previously pushed, delete it from origin
