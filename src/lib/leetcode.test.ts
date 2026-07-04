@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { mapDifficulty, fetchAllSolvedProblems } from "./leetcode"
+import {
+  mapDifficulty,
+  fetchAllSolvedProblems,
+  validateLeetCodeUsername,
+  validateLeetCodeSession,
+} from "./leetcode"
 
 // ─── mapDifficulty ─────────────────────────────────────────────────────────────
 
@@ -186,5 +191,75 @@ describe("fetchAllSolvedProblems", () => {
     if (!result.ok) return
     expect(result.items).toHaveLength(0)
     expect(result.totalNum).toBe(0)
+  })
+})
+
+// ─── validateLeetCodeUsername ──────────────────────────────────────────────────
+
+describe("validateLeetCodeUsername", () => {
+  it("returns found when matchedUser is present", async () => {
+    mockFetch([{ body: { data: { matchedUser: { username: "someone" } } } }])
+    const result = await validateLeetCodeUsername("someone")
+    expect(result.found).toBe(true)
+  })
+
+  it("returns not_found when matchedUser is null", async () => {
+    mockFetch([{ body: { data: { matchedUser: null } } }])
+    const result = await validateLeetCodeUsername("ghost")
+    expect(result.found).toBe(false)
+    if (result.found) return
+    expect(result.reason).toBe("not_found")
+  })
+
+  it("returns network_error when the request fails", async () => {
+    mockFetch([{ status: 500 }])
+    const result = await validateLeetCodeUsername("someone")
+    expect(result.found).toBe(false)
+    if (result.found) return
+    expect(result.reason).toBe("network_error")
+  })
+})
+
+// ─── validateLeetCodeSession ────────────────────────────────────────────────────
+
+describe("validateLeetCodeSession", () => {
+  it("returns valid with username when signed in", async () => {
+    mockFetch([{ body: { data: { userStatus: { isSignedIn: true, username: "someone" } } } }])
+    const result = await validateLeetCodeSession("token")
+    expect(result.valid).toBe(true)
+    if (!result.valid) return
+    expect(result.username).toBe("someone")
+  })
+
+  it("returns invalid when not signed in", async () => {
+    mockFetch([{ body: { data: { userStatus: { isSignedIn: false, username: "" } } } }])
+    const result = await validateLeetCodeSession("token")
+    expect(result.valid).toBe(false)
+    if (result.valid) return
+    expect(result.reason).toBe("invalid")
+  })
+
+  it("returns wrong_account when session username doesn't match expected", async () => {
+    mockFetch([{ body: { data: { userStatus: { isSignedIn: true, username: "alice" } } } }])
+    const result = await validateLeetCodeSession("token", "bob")
+    expect(result.valid).toBe(false)
+    if (result.valid) return
+    expect(result.reason).toBe("wrong_account")
+  })
+
+  it("returns invalid for 401/403 responses", async () => {
+    mockFetch([{ status: 401 }])
+    const result = await validateLeetCodeSession("bad-token")
+    expect(result.valid).toBe(false)
+    if (result.valid) return
+    expect(result.reason).toBe("invalid")
+  })
+
+  it("returns network_error when fetch throws", async () => {
+    mockFetch([{ throws: true }])
+    const result = await validateLeetCodeSession("token")
+    expect(result.valid).toBe(false)
+    if (result.valid) return
+    expect(result.reason).toBe("network_error")
   })
 })

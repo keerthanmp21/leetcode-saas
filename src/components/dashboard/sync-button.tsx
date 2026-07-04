@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import type { SyncSuccessResponse, SyncErrorResponse } from "@/types/sync"
 
 type SyncState =
   | { status: "idle" }
@@ -23,15 +24,16 @@ export function SyncButton() {
       const data = await res.json()
 
       if (!res.ok) {
+        const errorData = data as SyncErrorResponse
         setState({
           status: "error",
-          message: data.error ?? "Sync failed. Please try again.",
-          settingsRequired: data.settingsRequired ?? false,
+          message: errorData.error ?? "Sync failed. Please try again.",
+          settingsRequired: errorData.settingsRequired ?? false,
         })
         return
       }
 
-      const { totalFetched, newProblems } = data
+      const { totalFetched, newProblems } = data as SyncSuccessResponse
       const msg =
         newProblems > 0
           ? `Synced — ${newProblems} new problem${newProblems === 1 ? "" : "s"} added (${totalFetched} total)`

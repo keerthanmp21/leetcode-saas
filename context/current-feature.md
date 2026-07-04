@@ -1,42 +1,34 @@
-# Current Feature
-
-Dashboard Sync-Up — Fetch & Store Solved Problems
+# Current Feature: Typed External API Responses
 
 ## Status
 
-Complete
+In Progress
 
 ## Goals
 
-- Wire the "Sync Up" button to `POST /api/sync` which fetches all solved problems from LeetCode using the stored `LEETCODE_SESSION`
-- Pre-check that a valid session exists; if not, return an error directing the user to `/settings`
-- Paginate through `solvedQuestionsInfo` (page 1 → totalPages) sequentially, accumulating all results before writing
-- Batch-insert new problems into `Problem` (upsert on `titleSlug`) with only fields the response provides
-- Create or refresh `UserProblem` rows: insert with `firstSolvedAt = lastSolvedAt` on first sync; update `lastSolvedAt` only if newer on subsequent syncs
-- Return a sync summary (total fetched, new vs. known, timestamp); display "Synced — X new problems added" on the dashboard
-- Handle mid-pagination session expiry: stop cleanly, mark session invalid, surface a clear error
+- Enforce the existing `coding-standards.md` rule ("No `any` types", "Define interfaces for all props, API responses, and data models") at every `res.json()` call site that currently consumes an implicit `any`
+- Define explicit interfaces for each distinct response shape and cast `res.json()` to it, instead of letting fields be read off an untyped value
+- No behavior change — typing-only pass; error handling and control flow stay identical
+
+## Scope
+
+See `context/features/typed-external-responses.md` for full details. Summary of call sites:
+
+- `src/lib/leetcode.ts:74` — `fetchSolvedPage`'s `solvedQuestionsInfo` response
+- `src/lib/leetcode.ts:138` — `validateLeetCodeUsername`'s `matchedUser` response
+- `src/lib/leetcode.ts:189` — `validateLeetCodeSession`'s `userStatus` response
+- `src/components/dashboard/sync-button.tsx:23` — `POST /api/sync` response (success + error shape)
 
 ## Notes
 
-- No migration needed — `Problem` and `UserProblem` already support all fields this query populates
-- Fetch uses `solvedQuestionsInfo` with `filters: {}`, per `LEETCODE_GRAPHQL_DOCS.md` authenticated headers
-- `pageNum` in the response = total page count (not current page); loop page 1 → pageNum sequentially (not parallel, per rate-limit rules)
-- `questionFrontendId` → `Problem.questionId` as Int; guard against non-integer values
-- `question.topicTags[].name` → `Problem.topics` (String[]); these are LeetCode topics, NOT patterns
-- `Problem.acceptanceRate` and `Problem.isPaidOnly` are left null/default — not in this response
-- `lastAcSession.time` is ms Unix timestamp → convert to `Date`; if null, fall back to current sync timestamp
-- `totalSolves` is present in response but has no column — flag as future field, do not add column
-- `Pattern`/`ProblemPattern` and `Submission` tables are not touched — out of scope
-- Guard against concurrent syncs: disable button client-side while in-flight; consider server-side lock too
-- Never delete existing `UserProblem` rows — sync is purely additive/refreshing
+- Colocate each type with the file that owns the fetch (matches existing `SolvedQuestionItem` pattern in `leetcode.ts`); only export if another file needs it
+- Replace the duplicated inline `{ message?: string }` GraphQL error shape (`leetcode.ts:78`) with one shared type
+- `src/generated/prisma/**` is out of scope — auto-generated, not hand-written
+- A type cast is compile-time only; it does not add runtime validation (zod etc. is explicitly out of scope for this pass)
 
 ### Key Edge Cases
-- No valid session → return error, direct to `/settings`
-- 0 solved problems → complete cleanly with empty result
-- Mid-pagination unauthorized → stop, mark `LeetCodeSession.isValid = false`, return partial failure message
-- `lastAcSession.time` is null → use sync timestamp as fallback for `firstSolvedAt`/`lastSolvedAt`
-- `questionFrontendId` not parseable as Int → skip row with a warning, don't crash
-- Duplicate sync in-flight → button disabled client-side; server should handle gracefully
+- Existing inline anonymous types should be replaced by the shared named type, not left duplicated alongside it
+- Casting doesn't protect against LeetCode changing its response schema at runtime — flagged as a known limitation, not fixed here
 
 ## History
 

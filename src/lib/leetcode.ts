@@ -46,6 +46,33 @@ export type FetchSolvedResult =
   | { ok: true; items: SolvedQuestionItem[]; totalNum: number }
   | { ok: false; reason: "unauthorized" | "network_error" }
 
+type GraphQLError = { message?: string }
+
+interface SolvedQuestionsGraphQLResponse {
+  data?: {
+    solvedQuestionsInfo?: {
+      totalNum: number
+      pageNum: number
+      data: SolvedQuestionItem[]
+    }
+  }
+  errors?: GraphQLError[]
+}
+
+interface MatchedUserGraphQLResponse {
+  data?: {
+    matchedUser?: { username: string } | null
+  }
+  errors?: GraphQLError[]
+}
+
+interface UserStatusGraphQLResponse {
+  data?: {
+    userStatus?: { isSignedIn: boolean; username: string }
+  }
+  errors?: GraphQLError[]
+}
+
 async function fetchSolvedPage(
   sessionToken: string,
   pageNo: number,
@@ -71,11 +98,11 @@ async function fetchSolvedPage(
       return { ok: false, reason: "network_error" }
     }
 
-    const body = await res.json()
+    const body = (await res.json()) as SolvedQuestionsGraphQLResponse
     const info = body?.data?.solvedQuestionsInfo
     if (!info || body?.errors) {
       // LeetCode returns 200 with errors for invalid sessions
-      const hasAuthError = body?.errors?.some((e: { message?: string }) =>
+      const hasAuthError = body?.errors?.some((e) =>
         /sign in|authenticate|unauthorized/i.test(e.message ?? "")
       )
       return { ok: false, reason: hasAuthError ? "unauthorized" : "network_error" }
@@ -135,7 +162,7 @@ export async function validateLeetCodeUsername(
       return { found: false, reason: "network_error" }
     }
 
-    const data = await res.json()
+    const data = (await res.json()) as MatchedUserGraphQLResponse
     return data?.data?.matchedUser
       ? { found: true }
       : { found: false, reason: "not_found" }
@@ -186,10 +213,10 @@ export async function validateLeetCodeSession(
       return { valid: false, reason: "network_error" }
     }
 
-    const data = await res.json()
+    const data = (await res.json()) as UserStatusGraphQLResponse
     const status = data?.data?.userStatus
 
-    if (data?.errors || !status?.isSignedIn) {
+    if (data?.errors || !status || !status.isSignedIn) {
       return { valid: false, reason: "invalid" }
     }
 
